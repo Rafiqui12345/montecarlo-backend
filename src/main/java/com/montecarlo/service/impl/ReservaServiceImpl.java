@@ -25,6 +25,18 @@ public class ReservaServiceImpl implements ReservaService {
     @Override
     public ReservaDTO registrarReserva(ReservaRegistroDTO reservaRegistroDTO) {
 
+        boolean reservaExistente = reservaRepository
+                .existsByCanchaIdAndFechaAndHoraInicioLessThanAndHoraFinGreaterThan(
+                        reservaRegistroDTO.getCanchaId(),
+                        reservaRegistroDTO.getFecha(),
+                        reservaRegistroDTO.getHoraFin(),
+                        reservaRegistroDTO.getHoraInicio()
+                );
+
+        if (reservaExistente) {
+            throw new RuntimeException("Ya existe una reserva en ese horario");
+        }
+
         Usuario usuario = usuarioRepository.findById(reservaRegistroDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
