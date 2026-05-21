@@ -41,4 +41,13 @@ public class CanchaController {
 
         canchaService.eliminarCancha(id);
     }
+
+    @PutMapping("/{id}")
+    public CanchaDTO actualizarCancha(
+            @PathVariable Long id,
+            @RequestBody CanchaRegistroDTO canchaRegistroDTO
+    ) {
+
+        return canchaService.actualizarCancha(id, canchaRegistroDTO);
+    }
 }

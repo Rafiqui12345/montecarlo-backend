@@ -65,4 +65,20 @@ public class CanchaServiceImpl implements CanchaService {
                 .estado(cancha.getEstado())
                 .build();
     }
+
+    @Override
+    public CanchaDTO actualizarCancha(Long id, CanchaRegistroDTO canchaRegistroDTO) {
+
+        Cancha cancha = canchaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cancha no encontrada"));
+
+        cancha.setNombre(canchaRegistroDTO.getNombre());
+        cancha.setDescripcion(canchaRegistroDTO.getDescripcion());
+        cancha.setPrecioHora(canchaRegistroDTO.getPrecioHora());
+        cancha.setEstado(canchaRegistroDTO.getEstado());
+
+        Cancha canchaActualizada = canchaRepository.save(cancha);
+
+        return mapToDTO(canchaActualizada);
+    }
 }

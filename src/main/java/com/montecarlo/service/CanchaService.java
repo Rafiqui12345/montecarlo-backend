@@ -14,4 +14,6 @@ public interface CanchaService {
     CanchaDTO obtenerCanchaPorId(Long id);
 
     void eliminarCancha(Long id);
+
+    CanchaDTO actualizarCancha(Long id, CanchaRegistroDTO canchaRegistroDTO);
 }
