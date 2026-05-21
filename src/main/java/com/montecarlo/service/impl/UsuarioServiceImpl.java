@@ -82,4 +82,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         usuarioRepository.deleteById(id);
     }
+
+    private UsuarioDTO mapToDTO(Usuario usuario) {
+
+        return UsuarioDTO.builder()
+                .id(usuario.getId())
+                .nombre(usuario.getNombre())
+                .apellido(usuario.getApellido())
+                .telefono(usuario.getTelefono())
+                .correo(usuario.getCorreo())
+                .rol(usuario.getRol())
+                .build();
+    }
+
+    @Override
+    public UsuarioDTO actualizarUsuario(Long id, UsuarioDTO usuarioDTO) {
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setNombre(usuarioDTO.getNombre());
+        usuario.setApellido(usuarioDTO.getApellido());
+        usuario.setCorreo(usuarioDTO.getCorreo());
+        usuario.setTelefono(usuarioDTO.getTelefono());
+        usuario.setRol(usuarioDTO.getRol());
+
+        Usuario usuarioActualizado = usuarioRepository.save(usuario);
+
+        return mapToDTO(usuarioActualizado);
+    }
 }

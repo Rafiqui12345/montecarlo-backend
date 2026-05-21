@@ -14,4 +14,6 @@ public interface UsuarioService {
     UsuarioDTO obtenerUsuarioPorId(Long id);
 
     void eliminarUsuario(Long id);
+
+    UsuarioDTO actualizarUsuario(Long id, UsuarioDTO usuarioDTO);
 }
