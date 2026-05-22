@@ -7,6 +7,7 @@ import com.montecarlo.entity.Usuario;
 import com.montecarlo.repository.UsuarioRepository;
 import com.montecarlo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UsuarioDTO registrarUsuario(RegistroDTO registroDTO) {
@@ -28,7 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .nombre(registroDTO.getNombre())
                 .apellido(registroDTO.getApellido())
                 .correo(registroDTO.getCorreo())
-                .password(registroDTO.getPassword())
+                .password(passwordEncoder.encode(registroDTO.getPassword()))
                 .telefono(registroDTO.getTelefono())
                 .rol(Role.CLIENTE)
                 .build();
