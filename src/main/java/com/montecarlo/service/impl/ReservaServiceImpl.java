@@ -26,15 +26,25 @@ public class ReservaServiceImpl implements ReservaService {
     public ReservaDTO registrarReserva(ReservaRegistroDTO reservaRegistroDTO) {
 
         boolean reservaExistente = reservaRepository
-                .existsByCanchaIdAndFechaAndHoraInicioLessThanAndHoraFinGreaterThan(
+                .existeReservaSolapada(
                         reservaRegistroDTO.getCanchaId(),
                         reservaRegistroDTO.getFecha(),
-                        reservaRegistroDTO.getHoraFin(),
-                        reservaRegistroDTO.getHoraInicio()
+                        reservaRegistroDTO.getHoraInicio(),
+                        reservaRegistroDTO.getHoraFin()
                 );
 
         if (reservaExistente) {
             throw new RuntimeException("Ya existe una reserva en ese horario");
+        }
+
+        if (
+                !reservaRegistroDTO.getHoraInicio()
+                        .isBefore(reservaRegistroDTO.getHoraFin())
+        ) {
+
+            throw new RuntimeException(
+                    "La hora de inicio debe ser menor a la hora final"
+            );
         }
 
         Usuario usuario = usuarioRepository.findById(reservaRegistroDTO.getUsuarioId())
