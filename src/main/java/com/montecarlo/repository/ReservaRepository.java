@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
@@ -24,5 +25,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("horaInicio") LocalTime horaInicio,
             @Param("horaFin") LocalTime horaFin
     );
+
+    List<Reserva> findByFechaOrderByHoraInicio(LocalDate fecha);
 
 }

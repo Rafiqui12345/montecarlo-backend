@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/configuracion").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/configuracion").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/disponibilidad").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
