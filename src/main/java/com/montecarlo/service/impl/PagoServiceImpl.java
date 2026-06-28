@@ -53,7 +53,6 @@ public class PagoServiceImpl implements PagoService {
 
         // Crear reserva
         ReservaRegistroDTO reservaDTO = ReservaRegistroDTO.builder()
-                .usuarioId(pagoRegistroDTO.getUsuarioId())
                 .canchaId(pagoRegistroDTO.getCanchaId())
                 .fecha(pagoRegistroDTO.getFecha())
                 .horaInicio(pagoRegistroDTO.getHoraInicio())

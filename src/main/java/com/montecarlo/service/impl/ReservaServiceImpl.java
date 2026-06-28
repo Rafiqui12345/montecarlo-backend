@@ -10,6 +10,8 @@ import com.montecarlo.repository.ReservaRepository;
 import com.montecarlo.repository.UsuarioRepository;
 import com.montecarlo.service.ReservaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +50,11 @@ public class ReservaServiceImpl implements ReservaService {
             throw new RuntimeException("La hora de inicio debe ser menor que la hora de fin.");
         }
 
-        Usuario usuario = usuarioRepository.findById(reservaRegistroDTO.getUsuarioId())
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String correo = authentication.getName();
+
+        Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Cancha cancha = canchaRepository.findById(reservaRegistroDTO.getCanchaId())
@@ -90,7 +96,11 @@ public class ReservaServiceImpl implements ReservaService {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
 
-        Usuario usuario = usuarioRepository.findById(reservaRegistroDTO.getUsuarioId())
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String correo = authentication.getName();
+
+        Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Cancha cancha = canchaRepository.findById(reservaRegistroDTO.getCanchaId())

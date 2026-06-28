@@ -18,7 +18,5 @@ public class ReservaRegistroDTO {
 
     private LocalTime horaFin;
 
-    private Long usuarioId;
-
     private Long canchaId;
 }

@@ -12,8 +12,6 @@ import java.time.LocalTime;
 @Builder
 public class PagoRegistroDTO {
 
-    private Long usuarioId;
-
     private Long canchaId;
 
     private LocalDate fecha;
