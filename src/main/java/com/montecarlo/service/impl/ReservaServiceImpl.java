@@ -25,26 +25,27 @@ public class ReservaServiceImpl implements ReservaService {
     @Override
     public ReservaDTO registrarReserva(ReservaRegistroDTO reservaRegistroDTO) {
 
-        boolean reservaExistente = reservaRepository
-                .existeReservaSolapada(
-                        reservaRegistroDTO.getCanchaId(),
-                        reservaRegistroDTO.getFecha(),
-                        reservaRegistroDTO.getHoraInicio(),
-                        reservaRegistroDTO.getHoraFin()
-                );
+        Reserva reserva = registrarReservaEntity(reservaRegistroDTO);
+
+        return mapToDTO(reserva);
+    }
+
+    @Override
+    public Reserva registrarReservaEntity(ReservaRegistroDTO reservaRegistroDTO) {
+
+        boolean reservaExistente = reservaRepository.existeReservaSolapada(
+                reservaRegistroDTO.getCanchaId(),
+                reservaRegistroDTO.getFecha(),
+                reservaRegistroDTO.getHoraInicio(),
+                reservaRegistroDTO.getHoraFin()
+        );
 
         if (reservaExistente) {
             throw new RuntimeException("Ya existe una reserva en ese horario");
         }
 
-        if (
-                !reservaRegistroDTO.getHoraInicio()
-                        .isBefore(reservaRegistroDTO.getHoraFin())
-        ) {
-
-            throw new RuntimeException(
-                    "La hora de inicio debe ser menor a la hora final"
-            );
+        if (!reservaRegistroDTO.getHoraInicio().isBefore(reservaRegistroDTO.getHoraFin())) {
+            throw new RuntimeException("La hora de inicio debe ser menor que la hora de fin.");
         }
 
         Usuario usuario = usuarioRepository.findById(reservaRegistroDTO.getUsuarioId())
@@ -57,14 +58,12 @@ public class ReservaServiceImpl implements ReservaService {
                 .fecha(reservaRegistroDTO.getFecha())
                 .horaInicio(reservaRegistroDTO.getHoraInicio())
                 .horaFin(reservaRegistroDTO.getHoraFin())
-                .estado("ACTIVA")
+                .estado("PENDIENTE")
                 .usuario(usuario)
                 .cancha(cancha)
                 .build();
 
-        Reserva reservaGuardada = reservaRepository.save(reserva);
-
-        return mapToDTO(reservaGuardada);
+        return reservaRepository.save(reserva);
     }
 
     @Override
