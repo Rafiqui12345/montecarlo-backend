@@ -8,6 +8,7 @@ import com.montecarlo.entity.Pago;
 import com.montecarlo.entity.Reserva;
 import com.montecarlo.repository.ConfiguracionClubRepository;
 import com.montecarlo.repository.PagoRepository;
+import com.montecarlo.service.EmailService;
 import com.montecarlo.service.PagoService;
 import com.montecarlo.service.ReservaService;
 import com.montecarlo.util.CodigoOperacionGenerator;
@@ -26,7 +27,7 @@ public class PagoServiceImpl implements PagoService {
     private final PagoRepository pagoRepository;
     private final ConfiguracionClubRepository configuracionClubRepository;
     private final ReservaService reservaService;
-
+    private final EmailService emailService;
     @Override
     @Transactional
     public PagoDTO procesarPago(PagoRegistroDTO pagoRegistroDTO) {
@@ -71,7 +72,7 @@ public class PagoServiceImpl implements PagoService {
                 .build();
 
         Pago pagoGuardado = pagoRepository.save(pago);
-
+        emailService.enviarBoleta(pagoGuardado);
         return mapToDTO(pagoGuardado);
     }
 
