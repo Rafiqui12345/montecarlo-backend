@@ -21,11 +21,14 @@ public class DisponibilidadController {
 
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate fecha
+            LocalDate fecha,
+
+            @RequestParam
+            Long canchaId
 
     ) {
 
-        return disponibilidadService.obtenerDisponibilidad(fecha);
+        return disponibilidadService.obtenerDisponibilidad(fecha, canchaId);
 
     }
 

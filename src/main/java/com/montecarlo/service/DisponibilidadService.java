@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DisponibilidadService {
 
-    List<DisponibilidadDTO> obtenerDisponibilidad(LocalDate fecha);
+    List<DisponibilidadDTO> obtenerDisponibilidad(LocalDate fecha, Long canchaId);
 
 }

@@ -35,7 +35,6 @@ public class ConfiguracionClubServiceImpl implements ConfiguracionClubService {
         configuracion.setHoraApertura(dto.getHoraApertura());
         configuracion.setHoraCierre(dto.getHoraCierre());
         configuracion.setIntervaloReserva(dto.getIntervaloReserva());
-        configuracion.setPrecioHora(dto.getPrecioHora());
 
         ConfiguracionClub configuracionGuardada = configuracionClubRepository.save(configuracion);
 
@@ -49,7 +48,6 @@ public class ConfiguracionClubServiceImpl implements ConfiguracionClubService {
                 .horaApertura(configuracion.getHoraApertura())
                 .horaCierre(configuracion.getHoraCierre())
                 .intervaloReserva(configuracion.getIntervaloReserva())
-                .precioHora(configuracion.getPrecioHora())
                 .activo(configuracion.getActivo())
                 .build();
     }

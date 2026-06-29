@@ -26,7 +26,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("horaFin") LocalTime horaFin
     );
 
-    List<Reserva> findByFechaOrderByHoraInicio(LocalDate fecha);
+    List<Reserva> findByCanchaIdAndFechaOrderByHoraInicio(
+            Long canchaId,
+            LocalDate fecha
+    );
 
     @Query("SELECT COUNT(r) FROM Reserva r")
     Long contarReservas();

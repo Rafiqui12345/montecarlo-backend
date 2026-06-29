@@ -29,8 +29,5 @@ public class ConfiguracionClub {
     private Integer intervaloReserva;
 
     @Column(nullable = false)
-    private BigDecimal precioHora;
-
-    @Column(nullable = false)
     private Boolean activo;
 }

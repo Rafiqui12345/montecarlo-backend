@@ -3,9 +3,11 @@ package com.montecarlo.service.impl;
 import com.montecarlo.dto.PagoDTO;
 import com.montecarlo.dto.PagoRegistroDTO;
 import com.montecarlo.dto.ReservaRegistroDTO;
+import com.montecarlo.entity.Cancha;
 import com.montecarlo.entity.ConfiguracionClub;
 import com.montecarlo.entity.Pago;
 import com.montecarlo.entity.Reserva;
+import com.montecarlo.repository.CanchaRepository;
 import com.montecarlo.repository.ConfiguracionClubRepository;
 import com.montecarlo.repository.PagoRepository;
 import com.montecarlo.service.EmailService;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -28,6 +31,8 @@ public class PagoServiceImpl implements PagoService {
     private final ConfiguracionClubRepository configuracionClubRepository;
     private final ReservaService reservaService;
     private final EmailService emailService;
+    private final CanchaRepository canchaRepository;
+
     @Override
     @Transactional
     public PagoDTO procesarPago(PagoRegistroDTO pagoRegistroDTO) {
@@ -39,16 +44,18 @@ public class PagoServiceImpl implements PagoService {
                 pagoRegistroDTO.getFechaExpiracion()
         );
 
-        // Obtener configuración
-        ConfiguracionClub configuracion = configuracionClubRepository
-                .findByActivoTrue()
-                .orElseThrow(() -> new RuntimeException("No existe una configuración activa."));
+        Cancha cancha = canchaRepository.findById(pagoRegistroDTO.getCanchaId())
+                .orElseThrow(() -> new RuntimeException("Cancha no encontrada"));
+
+        if (!cancha.getEstado()) {
+            throw new RuntimeException("La cancha no se encuentra disponible.");
+        }
 
         // Calcular monto
         var monto = PrecioCalculator.calcularMonto(
                 pagoRegistroDTO.getHoraInicio(),
                 pagoRegistroDTO.getHoraFin(),
-                configuracion.getPrecioHora()
+                BigDecimal.valueOf(cancha.getPrecioHora())
         );
 
         // Crear reserva

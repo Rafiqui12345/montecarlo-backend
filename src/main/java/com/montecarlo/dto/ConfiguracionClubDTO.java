@@ -20,8 +20,6 @@ public class ConfiguracionClubDTO {
 
     private Integer intervaloReserva;
 
-    private BigDecimal precioHora;
-
     private Boolean activo;
 
 }
