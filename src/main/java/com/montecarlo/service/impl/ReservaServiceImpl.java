@@ -10,9 +10,8 @@ import com.montecarlo.repository.ReservaRepository;
 import com.montecarlo.repository.UsuarioRepository;
 import com.montecarlo.service.HistorialReservaService;
 import com.montecarlo.service.ReservaService;
+import com.montecarlo.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,12 +51,7 @@ public class ReservaServiceImpl implements ReservaService {
             throw new RuntimeException("La hora de inicio debe ser menor que la hora de fin.");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String correo = authentication.getName();
-
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
 
         Cancha cancha = canchaRepository.findById(reservaRegistroDTO.getCanchaId())
                 .orElseThrow(() -> new RuntimeException("Cancha no encontrada"));
@@ -105,12 +99,7 @@ public class ReservaServiceImpl implements ReservaService {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String correo = authentication.getName();
-
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
 
         Cancha cancha = canchaRepository.findById(reservaRegistroDTO.getCanchaId())
                 .orElseThrow(() -> new RuntimeException("Cancha no encontrada"));

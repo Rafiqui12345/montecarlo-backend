@@ -7,9 +7,8 @@ import com.montecarlo.entity.Usuario;
 import com.montecarlo.repository.ConsultaRepository;
 import com.montecarlo.repository.UsuarioRepository;
 import com.montecarlo.service.ConsultaService;
+import com.montecarlo.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,12 +24,7 @@ public class ConsultaServiceImpl implements ConsultaService {
     @Override
     public ConsultaDTO registrarConsulta(ConsultaRegistroDTO dto) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String correo = authentication.getName();
-
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
 
         Consulta consulta = Consulta.builder()
                 .asunto(dto.getAsunto())
