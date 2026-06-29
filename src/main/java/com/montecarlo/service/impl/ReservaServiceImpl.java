@@ -8,6 +8,7 @@ import com.montecarlo.entity.Usuario;
 import com.montecarlo.repository.CanchaRepository;
 import com.montecarlo.repository.ReservaRepository;
 import com.montecarlo.repository.UsuarioRepository;
+import com.montecarlo.service.HistorialReservaService;
 import com.montecarlo.service.ReservaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ public class ReservaServiceImpl implements ReservaService {
     private final ReservaRepository reservaRepository;
     private final UsuarioRepository usuarioRepository;
     private final CanchaRepository canchaRepository;
+    private final HistorialReservaService historialReservaService;
 
     @Override
     public ReservaDTO registrarReserva(ReservaRegistroDTO reservaRegistroDTO) {
@@ -69,7 +71,14 @@ public class ReservaServiceImpl implements ReservaService {
                 .cancha(cancha)
                 .build();
 
-        return reservaRepository.save(reserva);
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+
+        historialReservaService.registrarCambioEstado(
+                reservaGuardada.getId(),
+                reservaGuardada.getEstado()
+        );
+
+        return reservaGuardada;
     }
 
     @Override
@@ -134,5 +143,24 @@ public class ReservaServiceImpl implements ReservaService {
                 .usuarioId(reserva.getUsuario().getId())
                 .canchaId(reserva.getCancha().getId())
                 .build();
+    }
+
+    @Override
+    public ReservaDTO actualizarEstado(Long id, String estado) {
+
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+        reserva.setEstado(estado);
+
+        Reserva reservaActualizada = reservaRepository.save(reserva);
+
+        historialReservaService.registrarCambioEstado(
+                reservaActualizada.getId(),
+                estado
+        );
+
+        return mapToDTO(reservaActualizada);
+
     }
 }

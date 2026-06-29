@@ -50,4 +50,13 @@ public class ReservaController {
 
         reservaService.eliminarReserva(id);
     }
+
+    @PatchMapping("/{id}/estado")
+    public ReservaDTO actualizarEstado(
+            @PathVariable Long id,
+            @RequestParam String estado){
+
+        return reservaService.actualizarEstado(id, estado);
+
+    }
 }

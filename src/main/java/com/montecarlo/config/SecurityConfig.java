@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/consultas").authenticated()
                         .requestMatchers(HttpMethod.GET, "/consultas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/consultas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/historial/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/reservas/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

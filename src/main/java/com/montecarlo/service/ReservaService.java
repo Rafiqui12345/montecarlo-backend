@@ -18,5 +18,7 @@ public interface ReservaService {
 
     ReservaDTO actualizarReserva(Long id, ReservaRegistroDTO reservaRegistroDTO);
 
+    ReservaDTO actualizarEstado(Long id, String estado);
+
     void eliminarReserva(Long id);
 }
