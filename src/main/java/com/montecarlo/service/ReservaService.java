@@ -21,4 +21,6 @@ public interface ReservaService {
     ReservaDTO actualizarEstado(Long id, String estado);
 
     void eliminarReserva(Long id);
+
+    List<ReservaDTO> listarMisReservas();
 }

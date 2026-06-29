@@ -3,35 +3,34 @@ package com.montecarlo.service.impl;
 import com.montecarlo.dto.PagoDTO;
 import com.montecarlo.dto.PagoRegistroDTO;
 import com.montecarlo.dto.ReservaRegistroDTO;
-import com.montecarlo.entity.Cancha;
-import com.montecarlo.entity.ConfiguracionClub;
-import com.montecarlo.entity.Pago;
-import com.montecarlo.entity.Reserva;
+import com.montecarlo.entity.*;
 import com.montecarlo.repository.CanchaRepository;
-import com.montecarlo.repository.ConfiguracionClubRepository;
 import com.montecarlo.repository.PagoRepository;
+import com.montecarlo.repository.UsuarioRepository;
 import com.montecarlo.service.EmailService;
 import com.montecarlo.service.PagoService;
 import com.montecarlo.service.ReservaService;
 import com.montecarlo.util.CodigoOperacionGenerator;
 import com.montecarlo.util.PaymentSimulator;
 import com.montecarlo.util.PrecioCalculator;
+import com.montecarlo.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PagoServiceImpl implements PagoService {
 
     private final PagoRepository pagoRepository;
-    private final ConfiguracionClubRepository configuracionClubRepository;
     private final ReservaService reservaService;
     private final EmailService emailService;
     private final CanchaRepository canchaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional
@@ -92,6 +91,18 @@ public class PagoServiceImpl implements PagoService {
                 .estado(pago.getEstado())
                 .reservaId(pago.getReserva().getId())
                 .build();
+    }
+
+    @Override
+    public List<PagoDTO> listarMisPagos() {
+
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
+
+        return pagoRepository.listarMisPagos(usuario.getCorreo())
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+
     }
 
 }

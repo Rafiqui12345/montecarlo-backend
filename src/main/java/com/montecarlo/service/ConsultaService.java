@@ -15,4 +15,6 @@ public interface ConsultaService {
 
     void eliminarConsulta(Long id);
 
+    List<ConsultaDTO> listarMisConsultas();
+
 }

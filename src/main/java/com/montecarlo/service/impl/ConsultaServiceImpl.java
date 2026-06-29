@@ -73,4 +73,16 @@ public class ConsultaServiceImpl implements ConsultaService {
 
     }
 
+    @Override
+    public List<ConsultaDTO> listarMisConsultas() {
+
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
+
+        return consultaRepository.listarMisConsultas(usuario.getCorreo())
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+
+    }
+
 }

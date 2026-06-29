@@ -54,4 +54,12 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
         WHERE r.estado='CANCELADA'
         """)
     Long contarCanceladas();
+
+    @Query("""
+       SELECT r
+       FROM Reserva r
+       WHERE r.usuario.correo = :correo
+       ORDER BY r.fecha DESC, r.horaInicio DESC
+       """)
+    List<Reserva> listarMisReservas(@Param("correo") String correo);
 }

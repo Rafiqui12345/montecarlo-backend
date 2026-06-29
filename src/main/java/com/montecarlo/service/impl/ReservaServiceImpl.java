@@ -152,4 +152,17 @@ public class ReservaServiceImpl implements ReservaService {
         return mapToDTO(reservaActualizada);
 
     }
+
+    @Override
+    public List<ReservaDTO> listarMisReservas() {
+
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado(usuarioRepository);
+
+        return reservaRepository.listarMisReservas(usuario.getCorreo())
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+
+    }
+
 }

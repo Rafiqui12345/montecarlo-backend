@@ -5,6 +5,7 @@ import com.montecarlo.dto.ReservaRegistroDTO;
 import com.montecarlo.service.ReservaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +58,15 @@ public class ReservaController {
             @RequestParam String estado){
 
         return reservaService.actualizarEstado(id, estado);
+
+    }
+
+    @GetMapping("/mis-reservas")
+    public ResponseEntity<List<ReservaDTO>> listarMisReservas(){
+
+        return ResponseEntity.ok(
+                reservaService.listarMisReservas()
+        );
 
     }
 }

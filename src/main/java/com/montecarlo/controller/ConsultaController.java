@@ -5,6 +5,7 @@ import com.montecarlo.dto.ConsultaRegistroDTO;
 import com.montecarlo.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,15 @@ public class ConsultaController {
     public void eliminar(@PathVariable Long id){
 
         consultaService.eliminarConsulta(id);
+
+    }
+
+    @GetMapping("/mis-consultas")
+    public ResponseEntity<List<ConsultaDTO>> listarMisConsultas(){
+
+        return ResponseEntity.ok(
+                consultaService.listarMisConsultas()
+        );
 
     }
 
