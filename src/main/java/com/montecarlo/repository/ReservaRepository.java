@@ -28,4 +28,27 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByFechaOrderByHoraInicio(LocalDate fecha);
 
+    @Query("SELECT COUNT(r) FROM Reserva r")
+    Long contarReservas();
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Reserva r
+        WHERE r.estado='PENDIENTE'
+        """)
+    Long contarPendientes();
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Reserva r
+        WHERE r.estado='CONFIRMADA'
+        """)
+    Long contarConfirmadas();
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Reserva r
+        WHERE r.estado='CANCELADA'
+        """)
+    Long contarCanceladas();
 }

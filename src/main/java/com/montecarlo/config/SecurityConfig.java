@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/consultas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/historial/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/reservas/**").hasRole("ADMIN")
+                        .requestMatchers("/dashboard/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
