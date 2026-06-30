@@ -40,9 +40,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/historial/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/reservas/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/canchas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/canchas", "/canchas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/canchas").hasRole("ADMIN")
-                        .requestMatchers("/canchas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/canchas/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/canchas/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
