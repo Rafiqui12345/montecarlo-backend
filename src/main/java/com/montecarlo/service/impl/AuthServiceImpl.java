@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Credenciales inválidas");
         }
 
-        String token = jwtService.generateToken(usuario.getCorreo());
+        String token = jwtService.generateToken(usuario.getCorreo(), String.valueOf(usuario.getRol()));
 
         return AuthResponseDTO.builder()
                 .token(token)

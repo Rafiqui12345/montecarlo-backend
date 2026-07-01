@@ -16,11 +16,12 @@ public class JwtServiceImpl implements JwtService {
             "montecarlo_secret_key_muy_segura_2026_montecarlo";
 
     @Override
-    public String generateToken(String correo) {
+    public String generateToken(String correo, String rol) {
         Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
         return Jwts.builder()
                 .setSubject(correo)
+                .claim("role", rol)
                 .setIssuedAt(new Date())
                 .setExpiration(
                         new Date(System.currentTimeMillis() + 1000 * 60 * 60)
