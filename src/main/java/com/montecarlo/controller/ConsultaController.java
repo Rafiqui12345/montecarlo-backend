@@ -2,6 +2,7 @@ package com.montecarlo.controller;
 
 import com.montecarlo.dto.ConsultaDTO;
 import com.montecarlo.dto.ConsultaRegistroDTO;
+import com.montecarlo.dto.RespuestaConsultaDTO;
 import com.montecarlo.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,15 @@ public class ConsultaController {
         return ResponseEntity.ok(
                 consultaService.listarMisConsultas()
         );
+
+    }
+
+    @PatchMapping("/{id}/responder")
+    public ConsultaDTO responderConsulta(
+            @PathVariable Long id,
+            @RequestBody RespuestaConsultaDTO dto){
+
+        return consultaService.responderConsulta(id, dto);
 
     }
 
