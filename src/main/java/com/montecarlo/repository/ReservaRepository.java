@@ -59,7 +59,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
        SELECT r
        FROM Reserva r
        WHERE r.usuario.correo = :correo
-       ORDER BY r.fecha DESC, r.horaInicio DESC
+       ORDER BY r.fecha ASC, r.horaInicio ASC
        """)
     List<Reserva> listarMisReservas(@Param("correo") String correo);
 }
