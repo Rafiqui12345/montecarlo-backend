@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/canchas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/canchas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/pdf/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/consultas/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

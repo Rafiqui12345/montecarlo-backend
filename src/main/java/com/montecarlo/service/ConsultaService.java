@@ -2,6 +2,7 @@ package com.montecarlo.service;
 
 import com.montecarlo.dto.ConsultaDTO;
 import com.montecarlo.dto.ConsultaRegistroDTO;
+import com.montecarlo.dto.RespuestaConsultaDTO;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ public interface ConsultaService {
 
     List<ConsultaDTO> listarMisConsultas();
 
+    ConsultaDTO responderConsulta(
+            Long id,
+            RespuestaConsultaDTO dto
+    );
 }

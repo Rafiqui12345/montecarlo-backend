@@ -31,4 +31,11 @@ public class Consulta {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(columnDefinition = "TEXT")
+    private String respuesta;
+
+    private LocalDateTime fechaRespuesta;
+
+    @Column(nullable = false)
+    private String estado;
 }

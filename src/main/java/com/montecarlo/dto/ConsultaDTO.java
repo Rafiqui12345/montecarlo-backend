@@ -21,4 +21,10 @@ public class ConsultaDTO {
 
     private Long usuarioId;
 
+    private String respuesta;
+
+    private LocalDateTime fechaRespuesta;
+
+    private String estado;
+
 }
