@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
             mailSender.send(mensaje);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
             throw new RuntimeException("No se pudo enviar el correo.");
 
         }
