@@ -4,54 +4,76 @@ import com.montecarlo.entity.Consulta;
 import com.montecarlo.entity.Pago;
 import com.montecarlo.service.EmailService;
 import com.montecarlo.util.PdfGenerator;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
+
+import java.util.Base64;
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final JavaMailSender mailSender;
+    private final RestTemplate restTemplate;
+    private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+
+    @Value("${BREVO_API_KEY}")
+    private String apiKey;
 
     @Override
     public void enviarBoleta(Pago pago) {
 
         try {
 
-            MimeMessage mensaje = mailSender.createMimeMessage();
+            String pdfBase64 = Base64.getEncoder()
+                    .encodeToString(
+                            PdfGenerator.generarBoleta(pago)
+                    );
 
-            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
+            String body = """
+                {
+                  "sender": {
+                    "name": "Club Montecarlo",
+                    "email": "lunadepluton911@gmail.com"
+                  },
+                  "to": [
+                    {
+                      "email": "%s"
+                    }
+                  ],
+                  "subject": "Boleta de pago - Club Montecarlo",
+                  "textContent": "Hola %s, gracias por tu reserva. Adjuntamos tu boleta de pago.",
+                  "attachment": [
+                    {
+                      "content": "%s",
+                      "name": "Boleta.pdf"
+                    }
+                  ]
+                }
+                """.formatted(
+                    pago.getReserva()
+                            .getUsuario()
+                            .getCorreo(),
 
-            helper.setTo(pago.getReserva().getUsuario().getCorreo());
+                    pago.getReserva()
+                            .getUsuario()
+                            .getNombre(),
 
-            helper.setSubject("Boleta de pago - Club Montecarlo");
-
-            helper.setText("""
-                    Hola %s,
-
-                    Gracias por tu reserva.
-
-                    Adjuntamos tu boleta de pago en PDF.
-
-                    Club Montecarlo
-                    """.formatted(
-                    pago.getReserva().getUsuario().getNombre()
-            ));
-
-            helper.addAttachment(
-                    "Boleta.pdf",
-                    new ByteArrayResource(PdfGenerator.generarBoleta(pago))
+                    pdfBase64
             );
 
-            mailSender.send(mensaje);
+            enviarCorreo(body);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("No se pudo enviar el correo.");
+
+            throw new RuntimeException(
+                    "No se pudo enviar el correo.",
+                    e
+            );
 
         }
 
@@ -62,56 +84,55 @@ public class EmailServiceImpl implements EmailService {
 
         try {
 
-            MimeMessage mensaje = mailSender.createMimeMessage();
-
-            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
-
-            helper.setTo(consulta.getUsuario().getCorreo());
-
-            helper.setSubject("Respuesta a su consulta - Club Montecarlo");
-
-            helper.setText("""
-Hola %s,
-
-Hemos respondido la consulta que realizó.
-
---------------------------------------------
-
-ASUNTO:
-
-%s
-
---------------------------------------------
-
-SU CONSULTA:
-
-%s
-
---------------------------------------------
-
-RESPUESTA:
-
-%s
-
---------------------------------------------
-
-Gracias por comunicarse con nosotros.
-
-Club Montecarlo
-""".formatted(
+            String body = """
+            {
+              "sender": {
+                "name": "Club Montecarlo",
+                "email": "lunadepluton911@gmail.com"
+              },
+              "to": [
+                {
+                  "email": "%s"
+                }
+              ],
+              "subject": "Respuesta a su consulta - Club Montecarlo",
+              "textContent": "Hola %s,\\n\\nHemos respondido la consulta que realizó.\\n\\n--------------------------------------------\\n\\nASUNTO:\\n\\n%s\\n\\n--------------------------------------------\\n\\nSU CONSULTA:\\n\\n%s\\n\\n--------------------------------------------\\n\\nRESPUESTA:\\n\\n%s\\n\\n--------------------------------------------\\n\\nGracias por comunicarse con nosotros.\\n\\nClub Montecarlo"
+            }
+            """.formatted(
+                    consulta.getUsuario().getCorreo(),
                     consulta.getUsuario().getNombre(),
                     consulta.getAsunto(),
                     consulta.getMensaje(),
                     consulta.getRespuesta()
-            ));
+            );
 
-            mailSender.send(mensaje);
+           enviarCorreo(body);
 
         } catch (Exception e) {
 
-            throw new RuntimeException("No se pudo enviar la respuesta.");
+            throw new RuntimeException(
+                    "No se pudo enviar la respuesta.",
+                    e
+            );
 
         }
+
+    }
+
+    private void enviarCorreo(String body) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(body, headers);
+
+        restTemplate.postForEntity(
+                BREVO_URL,
+                request,
+                String.class
+        );
 
     }
 
