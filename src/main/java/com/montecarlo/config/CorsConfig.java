@@ -13,29 +13,19 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
 
-        config.setAllowedOriginPatterns(List.of("*"));
+        // CAMBIO: Solo permitimos tu dominio de frontend en producción
+        config.setAllowedOrigins(List.of("https://tu-dominio-de-vercel.vercel.app"));
 
         config.setAllowedHeaders(List.of("*"));
-
-        config.setAllowedMethods(List.of(
-                "GET",
-                "POST",
-                "PUT",
-                "PATCH",
-                "DELETE",
-                "OPTIONS"
-        ));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }
-
 }
