@@ -18,7 +18,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         // CAMBIO: Solo permitimos tu dominio de frontend en producción
-        config.setAllowedOrigins(List.of("https://tu-dominio-de-vercel.vercel.app"));
+        config.setAllowedOrigins(List.of("https://montecarlo-backend-production-51f6.up.railway.app"));
 
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
