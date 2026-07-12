@@ -14,6 +14,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponseDTO> manejarRuntime(RuntimeException ex){
 
+        ex.printStackTrace();
+
         ErrorResponseDTO error = ErrorResponseDTO.builder()
                 .fecha(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
